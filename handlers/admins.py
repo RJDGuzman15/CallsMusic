@@ -8,7 +8,7 @@ from helpers.wrappers import errors, admins_only
 
 
 @Client.on_message(
-    filters.command("pause")
+    filters.command(["pause", "pause@StreamMusicBot"])
     & filters.group
     & ~ filters.edited
 )
@@ -20,7 +20,7 @@ async def pause(client: Client, message: Message):
 
 
 @Client.on_message(
-    filters.command("resume")
+    filters.command(["resume", "resume@StreamMusicBot"])
     & filters.group
     & ~ filters.edited
 )
@@ -32,7 +32,7 @@ async def resume(client: Client, message: Message):
 
 
 @Client.on_message(
-    filters.command(["stop", "end"])
+    filters.command(["stop", "stop@StreamMusicBot", "end", "end@StreamMusicBot"])
     & filters.group
     & ~ filters.edited
 )
@@ -49,7 +49,7 @@ async def stop(client: Client, message: Message):
 
 
 @Client.on_message(
-    filters.command(["skip", "next"])
+    filters.command(["skip", "skip@StreamMusicBot", "next", "next@StreamMusicBot"])
     & filters.group
     & ~ filters.edited
 )

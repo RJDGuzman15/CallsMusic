@@ -3,15 +3,18 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
 
 @Client.on_message(
-    filters.command("start")
+    filters.command(["start", "start@StreamMusicBot"])
     & filters.private
-    & ~ filters.edited
+    & ~filters.edited
 )
 async def start_(client: Client, message: Message):
     await message.reply_text(
-        f"""<b>👋🏻 Hi {message.from_user.first_name}!</b>
+        f"""**Hi [{message.from_user.first_name}](tg://user?id={message.from_user.id})**
 
-I am Music Player.
+This is Music Stream Bot!
+Send me your Fav Song's YouTube Link & Join Voice Chat in [Linux Repositories](https://t.me/linux_repo) Group,
+
+Enjoy ...
 """,
         reply_markup=InlineKeyboardMarkup(
             [
@@ -20,22 +23,28 @@ I am Music Player.
                         "💬 Group", url="https://t.me/linux_repo"
                     ),
                     InlineKeyboardButton(
-                        "Channel 🔈", url="https://t.me/Discovery_Updates"
+                        "Bots Channel 🔈", url="https://t.me/Discovery_Updates"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Developer", url="https://t.me/AbirHasan2005"
                     )
                 ]
             ]
-        )
+        ),
+        parse_mode="Markdown"
     )
 
 
 @Client.on_message(
     filters.command("start")
     & filters.group
-    & ~ filters.edited
+    & ~filters.edited
 )
 async def start(client: Client, message: Message):
     await message.reply_text(
-        "💁🏻‍♂️ Do you want to search for a YouTube video?",
+        "Do you want to search for a YouTube video?",
         reply_markup=InlineKeyboardMarkup(
             [
                 [

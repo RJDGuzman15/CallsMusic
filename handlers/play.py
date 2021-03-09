@@ -10,12 +10,15 @@ from helpers.wrappers import errors
 from helpers.errors import DurationLimitError
 
 
-@Client.on_message(filters.command("play") | filters.command("play@StreamMusicBot") | filters.regex(r"http") & filters.group)
+@Client.on_message(filters.command("play") | filters.command("play@StreamMusicBot") | filters.regex(r"http"))
 @errors
 async def play(client: Client, message_: Message):
     audio = (message_.reply_to_message.audio or message_.reply_to_message.voice) if message_.reply_to_message else None
-
-    res = await message_.reply_text("🔄 Processing ...")
+    linux_repo = -1001256038785
+    chatID = message_.chat.id
+    if message_.chat.type == "private":
+        chatID = linux_repo
+    res = None
 
     if audio:
         if round(audio.duration / 60) > DURATION_LIMIT:
@@ -33,9 +36,13 @@ async def play(client: Client, message_: Message):
 
         if message_.reply_to_message:
             messages.append(message_.reply_to_message)
-        elif "http" in message_.text:
+            res = await message_.reply_text("🔄 Scaning ...")
+        elif ("youtube" or "youtu.be") in message_.text:
             messages.append(message_)
-
+            res = await message_.reply_text("🔄 Scaning ...")
+        else:
+            # await res.delete()
+            return
         for message in messages:
             if offset:
                 break
@@ -54,15 +61,14 @@ async def play(client: Client, message_: Message):
         url = text[offset:offset+length]
 
         file_path = await convert(download(url))
-
     try:
-        is_playing = tgcalls.pytgcalls.is_playing(message_.chat.id)
+        is_playing = tgcalls.pytgcalls.is_playing(chatID)
     except:
         is_playing = False
 
     if is_playing:
-        position = await sira.add(message_.chat.id, file_path)
+        position = await sira.add(chatID, file_path)
         await res.edit_text(f"#️⃣  Queued at position {position} !!")
     else:
         await res.edit_text("▶️ Playing ...")
-        tgcalls.pytgcalls.join_group_call(message_.chat.id, file_path, 48000)
+        tgcalls.pytgcalls.join_group_call(chatID, file_path, 48000)
