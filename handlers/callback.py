@@ -15,7 +15,7 @@ async def skipthecall(client: Client, query: CallbackQuery):
 		return
 	else:
 		chat_id = query.message.chat.id
-	    sira.task_done(chat_id)
+	    # sira.task_done(chat_id)
 	    if sira.is_empty(chat_id):
 	        tgcalls.pytgcalls.leave_group_call(chat_id)
 	    else:
