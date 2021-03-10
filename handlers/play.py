@@ -19,7 +19,9 @@ async def play(client: Client, message_: Message):
     if message_.chat.type == "private":
         chatID = linux_repo
     res = None
-
+    file_name = None
+    file_path = None
+    is_playing = None
     if audio:
         if round(audio.duration / 60) > DURATION_LIMIT:
             raise DurationLimitError(
@@ -35,11 +37,13 @@ async def play(client: Client, message_: Message):
         length = None
 
         if message_.reply_to_message:
+            if not ("youtube" or "youtu.be") in message_.reply_to_message.text:
+                return
+            res = await message_.reply_text("🔄 Scaning ...", parse_mode="Markdown", disable_web_page_preview=True)
             messages.append(message_.reply_to_message)
-            res = await message_.reply_text("🔄 Scaning ...")
         elif ("youtube" or "youtu.be") in message_.text:
+            res = await message_.reply_text("🔄 Scaning ...", parse_mode="Markdown", disable_web_page_preview=True)
             messages.append(message_)
-            res = await message_.reply_text("🔄 Scaning ...")
         else:
             # await res.delete()
             return
@@ -70,5 +74,5 @@ async def play(client: Client, message_: Message):
         position = await sira.add(chatID, file_path)
         await res.edit_text(f"#️⃣  Queued at position {position} !!")
     else:
-        await res.edit_text("▶️ Playing ...")
+        await res.edit_text(f"A Song Requested By [{message_.from_user.first_name}](tg://user?id={message_.from_user.id})\n\n▶️ Playing `{file_name}` ...")
         tgcalls.pytgcalls.join_group_call(chatID, file_path, 48000)
